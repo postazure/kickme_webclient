@@ -1,5 +1,6 @@
 import React from 'react'
+import Header from './public/scripts/views/shared/header.js'
 
 React.render((
-    <div>Hello World</div>
+    <Header />
 ), document.getElementById('main'))
