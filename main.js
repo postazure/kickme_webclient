@@ -1,2 +1,5 @@
-document.write("It works.");
-document.write("It works.");
+import React from 'react'
+
+React.render((
+    <div>Hello World</div>
+), document.getElementById('main'))
