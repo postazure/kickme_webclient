@@ -1,0 +1,20 @@
+{
+  "name": "kickme_webclient",
+  "version": "1.0.0",
+  "description": "Notifications for kickstarter",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack ./main.js build/bundle.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/postazure/kickme_webclient.git"
+  },
+  "author": "Max Gordon",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/postazure/kickme_webclient/issues"
+  },
+  "homepage": "https://github.com/postazure/kickme_webclient"
+}
