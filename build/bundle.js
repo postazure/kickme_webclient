@@ -20564,13 +20564,14 @@
 
 	        _get(Object.getPrototypeOf(WatchList.prototype), 'constructor', this).call(this);
 	        this.state = { projectCreators: [] };
+	        this.getProjectCreators = this.getProjectCreators.bind(this);
 	    }
 
 	    _createClass(WatchList, [{
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
 	            this.getProjectCreators();
-	            setInterval(this.getProjectCreators, 20000);
+	            setInterval(this.getProjectCreators, 2000);
 	        }
 	    }, {
 	        key: 'getProjectCreators',
@@ -22062,6 +22063,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _superagent = __webpack_require__(160);
+
+	var _superagent2 = _interopRequireDefault(_superagent);
+
 	var _searchResultsJs = __webpack_require__(164);
 
 	var _searchResultsJs2 = _interopRequireDefault(_searchResultsJs);
@@ -22080,12 +22085,12 @@
 	        };
 	        this.getValues = this.getValues.bind(this);
 	        this.tick = this.tick.bind(this);
+	        this.searchProjectCreators = this.searchProjectCreators.bind(this);
 	    }
 
 	    _createClass(SearchBox, [{
 	        key: 'tick',
 	        value: function tick() {
-	            console.log(this.state.searchDebounceTimer);
 	            this.setState({ searchDebounceTimer: this.state.searchDebounceTimer + 1 });
 	        }
 	    }, {
@@ -22099,28 +22104,45 @@
 	            clearInterval(this.interval);
 	        }
 	    }, {
+	        key: 'clearSearchBox',
+	        value: function clearSearchBox() {
+	            var searchInput = _react2['default'].findDOMNode(this.refs.search);
+	            searchInput.value = "";
+	        }
+	    }, {
 	        key: 'getValues',
 	        value: function getValues(e) {
 	            var search = _react2['default'].findDOMNode(this.refs.search).value.trim();
+	            var minCharactersForSearch = 3;
 
-	            if (search.length > 0) {
+	            if (search.length >= minCharactersForSearch) {
 	                if (this.state.searchDebounceTimer <= 1) {
 	                    return;
 	                }
 	                this.setState({ searchDebounceTimer: 0 });
 
-	                this.setState({
-	                    hasResults: true,
-	                    projectCreators: [{
-	                        "name": "CoolMiniOrNot",
-	                        "kickstarter_id": 1234,
-	                        "profile_avatar": "https://avatar.com/coolminiornot",
-	                        "url_api": "https://profile.com/coolminiornot"
-	                    }]
-	                });
+	                this.searchProjectCreators(search);
 	            } else {
 	                this.setState({ hasResults: false });
 	            }
+	        }
+	    }, {
+	        key: 'searchProjectCreators',
+	        value: function searchProjectCreators(query) {
+	            var _this = this;
+
+	            var normalizedQuery = query.replace(/\s /g, "+");
+	            console.log(normalizedQuery);
+	            _superagent2['default'].post('http://localhost:3000/project_creators/search?search_name=' + normalizedQuery).end(function (err, res) {
+	                if (err) {
+	                    console.error(err);
+	                }
+	                console.log(res.body);
+	                _this.setState({
+	                    hasResults: true,
+	                    projectCreators: res.body
+	                });
+	            });
 	        }
 	    }, {
 	        key: 'render',
@@ -22134,7 +22156,7 @@
 	                    _react2['default'].createElement('input', { onKeyUp: this.getValues, ref: 'search', className: 'prompt', type: 'text', placeholder: 'new project creator' }),
 	                    _react2['default'].createElement('i', { className: 'search icon' })
 	                ),
-	                _react2['default'].createElement(_searchResultsJs2['default'], { hasResults: this.state.hasResults, projectCreators: this.state.projectCreators })
+	                _react2['default'].createElement(_searchResultsJs2['default'], { clearSearchBox: this.clearSearchBox, hasResults: this.state.hasResults, projectCreators: this.state.projectCreators })
 	            );
 	        }
 	    }]);
@@ -22216,47 +22238,72 @@
 /* 165 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
+	Object.defineProperty(exports, '__esModule', {
 	    value: true
 	});
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _superagent = __webpack_require__(160);
+
+	var _superagent2 = _interopRequireDefault(_superagent);
+
 	var SearchResult = (function (_React$Component) {
 	    _inherits(SearchResult, _React$Component);
 
-	    function SearchResult() {
+	    function SearchResult(props) {
 	        _classCallCheck(this, SearchResult);
 
-	        _get(Object.getPrototypeOf(SearchResult.prototype), "constructor", this).apply(this, arguments);
+	        _get(Object.getPrototypeOf(SearchResult.prototype), 'constructor', this).call(this);
+	        this.addCreatorToWatchList = this.addCreatorToWatchList.bind(this);
 	    }
 
 	    _createClass(SearchResult, [{
-	        key: "render",
+	        key: 'addCreatorToWatchList',
+	        value: function addCreatorToWatchList() {
+	            var userToken = 'gtYz5UAsmNBqSJY1EfNCkHaP'; //TODO: Don't hard code this
+
+	            _superagent2['default'].post('http://localhost:3000/user/follow?token=' + userToken).send({
+	                project_creator: {
+	                    kickstarter_id: this.props.projectCreator.kickstarter_id,
+	                    name: this.props.projectCreator.name,
+	                    profile_avatar: this.props.projectCreator.profile_avatar,
+	                    profile_url: this.props.projectCreator.profile_url
+	                }
+	            }).end(function (err, res) {
+	                if (err) {
+	                    console.error(err);
+	                }
+	                if (res) {}
+	            });
+	        }
+	    }, {
+	        key: 'render',
 	        value: function render() {
-	            return _react2["default"].createElement(
-	                "a",
-	                { className: "result" },
-	                _react2["default"].createElement(
-	                    "div",
-	                    { className: "content" },
-	                    _react2["default"].createElement(
-	                        "div",
-	                        { className: "title" },
+	            return _react2['default'].createElement(
+	                'a',
+	                { className: 'result', onClick: this.addCreatorToWatchList },
+	                _react2['default'].createElement(
+	                    'div',
+	                    { className: 'content' },
+	                    _react2['default'].createElement('img', { className: 'ui avatar image', src: this.props.projectCreator.profile_avatar }),
+	                    _react2['default'].createElement(
+	                        'div',
+	                        { className: 'title' },
 	                        this.props.projectCreator.name
 	                    )
 	                )
@@ -22265,10 +22312,10 @@
 	    }]);
 
 	    return SearchResult;
-	})(_react2["default"].Component);
+	})(_react2['default'].Component);
 
-	exports["default"] = SearchResult;
-	module.exports = exports["default"];
+	exports['default'] = SearchResult;
+	module.exports = exports['default'];
 
 /***/ }
 /******/ ]);

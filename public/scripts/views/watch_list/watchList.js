@@ -6,12 +6,13 @@ export default class WatchList extends React.Component {
 
     constructor(props) {
         super();
-        this.state = { projectCreators: [] };
+        this.state = { projectCreators: [] }
+        this.getProjectCreators = this.getProjectCreators.bind(this);
     }
 
     componentDidMount() {
         this.getProjectCreators();
-        setInterval(this.getProjectCreators, 20000);
+        setInterval(this.getProjectCreators, 2000);
     }
 
     getProjectCreators() {

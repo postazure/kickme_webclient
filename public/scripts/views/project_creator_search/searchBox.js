@@ -1,4 +1,5 @@
 import React from 'react'
+import request from 'superagent'
 import SearchResults from './searchResults.js'
 
 export default class SearchBox extends React.Component {
@@ -11,10 +12,10 @@ export default class SearchBox extends React.Component {
         };
         this.getValues = this.getValues.bind(this);
         this.tick = this.tick.bind(this);
+        this.searchProjectCreators = this.searchProjectCreators.bind(this);
     }
 
     tick() {
-        console.log( this.state.searchDebounceTimer );
         this.setState({searchDebounceTimer: this.state.searchDebounceTimer + 1})
     }
 
@@ -26,27 +27,39 @@ export default class SearchBox extends React.Component {
         clearInterval(this.interval);
     }
 
+    clearSearchBox() {
+        let searchInput = React.findDOMNode(this.refs.search);
+        searchInput.value = "";
+    }
+
     getValues(e) {
         let search = React.findDOMNode(this.refs.search).value.trim();
+        let minCharactersForSearch = 3;
 
-        if (search.length > 0 ) {
+        if (search.length >= minCharactersForSearch ) {
             if (this.state.searchDebounceTimer <= 1) {return;}
             this.setState({searchDebounceTimer: 0});
 
-            this.setState({
-                hasResults: true,
-                projectCreators: [
-                    {
-                        "name": "CoolMiniOrNot",
-                        "kickstarter_id": 1234,
-                        "profile_avatar": "https://avatar.com/coolminiornot",
-                        "url_api": "https://profile.com/coolminiornot"
-                    }
-                ]
-            });
+            this.searchProjectCreators(search);
         } else {
             this.setState({hasResults: false})
         }
+    }
+
+    searchProjectCreators(query) {
+        let normalizedQuery = query.replace(/\s /g,"+")
+        console.log( normalizedQuery );
+        request
+            .post('http://localhost:3000/project_creators/search?search_name=' + normalizedQuery)
+            .end((err, res) => {
+                if (err) {console.error( err );}
+                console.log( res.body );
+                this.setState({
+                    hasResults: true,
+                    projectCreators: res.body
+                });
+            }
+        );
     }
 
 
@@ -57,7 +70,7 @@ export default class SearchBox extends React.Component {
                     <input onKeyUp={this.getValues} ref="search" className="prompt" type="text" placeholder="new project creator" />
                     <i className="search icon"></i>
                 </div>
-                <SearchResults hasResults={this.state.hasResults} projectCreators={this.state.projectCreators}/>
+                <SearchResults clearSearchBox={this.clearSearchBox} hasResults={this.state.hasResults} projectCreators={this.state.projectCreators}/>
             </div>
         )
     }
