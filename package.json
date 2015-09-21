@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "react": "^0.13.3",
-    "semantic-ui-css": "^2.1.4"
+    "semantic-ui-css": "^2.1.4",
+    "superagent": "^1.4.0"
   }
 }
