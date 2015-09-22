@@ -4,6 +4,7 @@ import SearchBox from '../project_creator_search/searchBox.js'
 export default class Header extends React.Component {
 
     signUserOut() {
+        // TODO: Hit api endpoint to signout
         localStorage.removeItem('Kickme');
     }
 
