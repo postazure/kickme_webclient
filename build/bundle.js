@@ -22660,10 +22660,9 @@
 	            var passwordConfirmation = _react2['default'].findDOMNode(this.refs.passwordConfirmation).value.trim();
 
 	            if (!email || !password || !passwordConfirmation) {
-	                console.error("Form has blank fields!");
 	                return;
 	            } else if (password !== passwordConfirmation) {
-	                console.error("Password and Password Confirmation do not match!");
+	                this.addFormError({ password: ['does not match Password Confirmation!'] });
 	                return;
 	            }
 
@@ -22693,14 +22692,15 @@
 	        value: function registerUser(email, password) {
 	            var _this = this;
 
+	            this.setState({ formErrors: {} });
+
 	            _superagent2['default'].post('http://localhost:3000/registrations').send({ user: {
 	                    password: password, email: email
 	                } }).end(function (err, res) {
 	                if (err) {
-	                    //console.log( err );
 	                    var errors = Object.assign({}, res.body['errors']);
 
-	                    _this.setState({ formErrors: errors });
+	                    _this.addFormError(errors);
 	                    console.log('formErrors', _this.state.formErrors);
 	                    return;
 	                }
@@ -22712,6 +22712,18 @@
 	                }
 	                _this.clearForm();
 	            });
+	        }
+	    }, {
+	        key: 'addFormError',
+	        value: function addFormError() {
+	            var errors = this.state.formErrors;
+
+	            for (var _len = arguments.length, errorsObj = Array(_len), _key = 0; _key < _len; _key++) {
+	                errorsObj[_key] = arguments[_key];
+	            }
+
+	            errors = Object.assign.apply(Object, [errors].concat(errorsObj));
+	            this.setState({ formErrors: errors });
 	        }
 	    }, {
 	        key: 'render',

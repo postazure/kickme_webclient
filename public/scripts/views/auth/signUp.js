@@ -19,10 +19,9 @@ export default class SignUp extends React.Component {
         let passwordConfirmation = React.findDOMNode(this.refs.passwordConfirmation).value.trim();
 
         if (!email || !password || !passwordConfirmation) {
-            console.error( "Form has blank fields!" );
             return;
         } else if (password !== passwordConfirmation) {
-            console.error( "Password and Password Confirmation do not match!");
+            this.addFormError( {password: ['does not match Password Confirmation!']});
             return;
         }
 
@@ -47,6 +46,8 @@ export default class SignUp extends React.Component {
     }
 
     registerUser(email, password) {
+        this.setState({formErrors: {}});
+
         request
             .post('http://localhost:3000/registrations')
             .send({ user: {
@@ -54,10 +55,9 @@ export default class SignUp extends React.Component {
             }})
             .end((err, res) => {
                 if (err) {
-                    //console.log( err );
                     let errors = Object.assign({}, res.body['errors']);
 
-                    this.setState({formErrors: errors});
+                    this.addFormError(errors);
                     console.log( 'formErrors', this.state.formErrors );
                     return;
                 }
@@ -70,6 +70,12 @@ export default class SignUp extends React.Component {
                 this.clearForm()
             }
         );
+    }
+
+    addFormError(...errorsObj) {
+        let errors = this.state.formErrors;
+        errors = Object.assign(errors, ...errorsObj);
+        this.setState({formErrors: errors});
     }
 
     render() {
