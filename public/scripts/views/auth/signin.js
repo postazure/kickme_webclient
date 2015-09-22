@@ -33,11 +33,25 @@ export default class SignIn extends React.Component {
             .post('http://localhost:3000/login' + params)
             .end((err, res) => {
                 if (err) {console.error( err );}
-
-                console.log( res.body );
+                if (res) {
+                    console.log( res.body );
+                    let token = res.body.token;
+                    this.storeUser(email, token)
+                }
                 this.clearForm()
             }
         );
+    }
+
+    storeUser(email, token) {
+        let json = JSON.stringify({
+            user: {
+                email: email,
+                token: token
+            }
+        });
+
+        localStorage.setItem("Kickme", json);
     }
 
     render() {

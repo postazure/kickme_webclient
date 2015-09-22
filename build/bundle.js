@@ -52,29 +52,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _publicScriptsViewsSharedHeaderJs = __webpack_require__(157);
+	var _publicScriptsAppJs = __webpack_require__(171);
 
-	var _publicScriptsViewsSharedHeaderJs2 = _interopRequireDefault(_publicScriptsViewsSharedHeaderJs);
+	var _publicScriptsAppJs2 = _interopRequireDefault(_publicScriptsAppJs);
 
-	var _publicScriptsViewsWatch_listWatchListJs = __webpack_require__(158);
-
-	var _publicScriptsViewsWatch_listWatchListJs2 = _interopRequireDefault(_publicScriptsViewsWatch_listWatchListJs);
-
-	var _publicScriptsViewsAuthAuthJs = __webpack_require__(168);
-
-	var _publicScriptsViewsAuthAuthJs2 = _interopRequireDefault(_publicScriptsViewsAuthAuthJs);
-
-	_react2['default'].render(_react2['default'].createElement(
-	    'div',
-	    { className: 'container' },
-	    _react2['default'].createElement(_publicScriptsViewsSharedHeaderJs2['default'], null),
-	    _react2['default'].createElement(
-	        'div',
-	        { className: 'content container' },
-	        _react2['default'].createElement(_publicScriptsViewsWatch_listWatchListJs2['default'], null),
-	        _react2['default'].createElement(_publicScriptsViewsAuthAuthJs2['default'], null)
-	    )
-	), document.getElementById('main'));
+	_react2['default'].render(_react2['default'].createElement(_publicScriptsAppJs2['default'], null), document.getElementById('main'));
 
 /***/ },
 /* 1 */
@@ -20511,7 +20493,7 @@
 	                    _react2['default'].createElement(
 	                        'span',
 	                        { className: 'item' },
-	                        _react2['default'].createElement(_project_creator_searchSearchBoxJs2['default'], null)
+	                        _react2['default'].createElement(_project_creator_searchSearchBoxJs2['default'], { user: this.props.user })
 	                    ),
 	                    _react2['default'].createElement(
 	                        'span',
@@ -20583,7 +20565,7 @@
 	        value: function getProjectCreators() {
 	            var _this = this;
 
-	            var userToken = 'gtYz5UAsmNBqSJY1EfNCkHaP'; //TODO: Don't hard code this
+	            var userToken = this.props.user.token;
 
 	            _superagent2['default'].get('http://localhost:3000/user/project_creators?token=' + userToken).end(function (err, res) {
 	                if (err) {
@@ -22167,7 +22149,7 @@
 	                    _react2['default'].createElement('input', { onKeyUp: this.getValues, ref: 'search', className: 'prompt', type: 'text', placeholder: 'new project creator' }),
 	                    _react2['default'].createElement('i', { className: 'search icon' })
 	                ),
-	                _react2['default'].createElement(_searchResultsJs2['default'], { vessel: this.vessel, hasResults: this.state.hasResults, projectCreators: this.state.projectCreators })
+	                _react2['default'].createElement(_searchResultsJs2['default'], { user: this.props.user, vessel: this.vessel, hasResults: this.state.hasResults, projectCreators: this.state.projectCreators })
 	            );
 	        }
 	    }]);
@@ -22226,7 +22208,7 @@
 	                searchResults = _react2['default'].createElement('div', { className: 'results hidden' });
 	            } else {
 	                var projectCreators = this.props.projectCreators.map(function (projectCreator) {
-	                    return _react2['default'].createElement(_searchResultJs2['default'], { vessel: _this.props.vessel, projectCreator: projectCreator });
+	                    return _react2['default'].createElement(_searchResultJs2['default'], { user: _this.props.user, vessel: _this.props.vessel, projectCreator: projectCreator });
 	                });
 
 	                searchResults = _react2['default'].createElement(
@@ -22289,7 +22271,13 @@
 	        value: function addCreatorToWatchList() {
 	            var _this = this;
 
-	            var userToken = 'gtYz5UAsmNBqSJY1EfNCkHaP'; //TODO: Don't hard code this
+	            var user = this.props.user;
+
+	            if (!user) {
+	                console.error('No user, cannot add pc to misisng user.');
+	                return;
+	            }
+	            var userToken = user.token;
 
 	            _superagent2['default'].post('http://localhost:3000/user/follow?token=' + userToken).send({
 	                project_creator: {
@@ -22549,10 +22537,25 @@
 	                if (err) {
 	                    console.error(err);
 	                }
-
-	                console.log(res.body);
+	                if (res) {
+	                    console.log(res.body);
+	                    var token = res.body.token;
+	                    _this.storeUser(email, token);
+	                }
 	                _this.clearForm();
 	            });
+	        }
+	    }, {
+	        key: 'storeUser',
+	        value: function storeUser(email, token) {
+	            var json = JSON.stringify({
+	                user: {
+	                    email: email,
+	                    token: token
+	                }
+	            });
+
+	            localStorage.setItem("Kickme", json);
 	        }
 	    }, {
 	        key: 'render',
@@ -22684,6 +22687,95 @@
 
 	exports["default"] = SignUp;
 	module.exports = exports["default"];
+
+/***/ },
+/* 171 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _viewsSharedHeaderJs = __webpack_require__(157);
+
+	var _viewsSharedHeaderJs2 = _interopRequireDefault(_viewsSharedHeaderJs);
+
+	var _viewsWatch_listWatchListJs = __webpack_require__(158);
+
+	var _viewsWatch_listWatchListJs2 = _interopRequireDefault(_viewsWatch_listWatchListJs);
+
+	var _viewsAuthAuthJs = __webpack_require__(168);
+
+	var _viewsAuthAuthJs2 = _interopRequireDefault(_viewsAuthAuthJs);
+
+	var App = (function (_React$Component) {
+	    _inherits(App, _React$Component);
+
+	    function App(props) {
+	        _classCallCheck(this, App);
+
+	        _get(Object.getPrototypeOf(App.prototype), 'constructor', this).call(this);
+	        var user = this.getUser();
+
+	        this.state = { user: user };
+	        this.getUser = this.getUser.bind(this);
+	    }
+
+	    _createClass(App, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            this.getUser();
+	            setInterval(this.getUser, 200);
+	        }
+	    }, {
+	        key: 'getUser',
+	        value: function getUser() {
+	            var storageData = localStorage.getItem('Kickme');
+	            if (!storageData) {
+	                return;
+	            }
+
+	            return JSON.parse(storageData).user || false;
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var user = this.state.user;
+
+	            return _react2['default'].createElement(
+	                'div',
+	                { className: 'container' },
+	                _react2['default'].createElement(_viewsSharedHeaderJs2['default'], { user: user }),
+	                _react2['default'].createElement(
+	                    'div',
+	                    { className: 'content container' },
+	                    user ? _react2['default'].createElement(_viewsWatch_listWatchListJs2['default'], { user: user }) : _react2['default'].createElement(_viewsAuthAuthJs2['default'], null)
+	                )
+	            );
+	        }
+	    }]);
+
+	    return App;
+	})(_react2['default'].Component);
+
+	exports['default'] = App;
+	module.exports = exports['default'];
 
 /***/ }
 /******/ ]);

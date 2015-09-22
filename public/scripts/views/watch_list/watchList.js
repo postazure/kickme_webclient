@@ -6,7 +6,7 @@ export default class WatchList extends React.Component {
 
     constructor(props) {
         super();
-        this.state = { projectCreators: [] }
+        this.state = { projectCreators: [] };
         this.getProjectCreators = this.getProjectCreators.bind(this);
     }
 
@@ -16,7 +16,7 @@ export default class WatchList extends React.Component {
     }
 
     getProjectCreators() {
-        let userToken = 'gtYz5UAsmNBqSJY1EfNCkHaP'; //TODO: Don't hard code this
+        let userToken = this.props.user.token;
 
         request
             .get('http://localhost:3000/user/project_creators?token=' + userToken)

@@ -11,7 +11,7 @@ export default class SearchResults extends React.Component {
         } else {
             let projectCreators = this.props.projectCreators.map((projectCreator) => {
                 return (
-                    <SearchResult vessel={this.props.vessel} projectCreator={projectCreator}/>
+                    <SearchResult user={this.props.user} vessel={this.props.vessel} projectCreator={projectCreator}/>
                 )
             });
 

@@ -10,7 +10,13 @@ export default class SearchResult extends React.Component {
     }
     
     addCreatorToWatchList() {
-        let userToken = 'gtYz5UAsmNBqSJY1EfNCkHaP'; //TODO: Don't hard code this
+        let user = this.props.user;
+
+        if (!user) {
+            console.error( 'No user, cannot add pc to misisng user.' );
+            return;
+        }
+        let userToken = user.token;
 
         request
             .post('http://localhost:3000/user/follow?token=' + userToken)

@@ -11,7 +11,7 @@ export default class Header extends React.Component {
 
                 <div className="right menu">
                 <span className="item">
-                    <SearchBox />
+                    <SearchBox user={this.props.user} />
                 </span>
                 <span className="item">
                     Sign In/Sign Out

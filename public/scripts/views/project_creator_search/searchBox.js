@@ -73,7 +73,7 @@ export default class SearchBox extends React.Component {
                     <input onKeyUp={this.getValues} ref="search" className="prompt" type="text" placeholder="new project creator" />
                     <i className="search icon"></i>
                 </div>
-                <SearchResults vessel={this.vessel} hasResults={this.state.hasResults} projectCreators={this.state.projectCreators}/>
+                <SearchResults user={this.props.user} vessel={this.vessel} hasResults={this.state.hasResults} projectCreators={this.state.projectCreators}/>
             </div>
         )
     }
