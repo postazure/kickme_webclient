@@ -20472,34 +20472,39 @@
 	    }
 
 	    _createClass(Header, [{
+	        key: 'signUserOut',
+	        value: function signUserOut() {
+	            localStorage.removeItem('Kickme');
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
+	            var user = this.props.user;
+
+	            var loggedInMenu = _react2['default'].createElement(
+	                'a',
+	                { onClick: this.signUserOut, className: 'item' },
+	                'Sign Out'
+	            );
+	            var searchBox = _react2['default'].createElement(
+	                'span',
+	                { className: 'item' },
+	                _react2['default'].createElement(_project_creator_searchSearchBoxJs2['default'], { user: user })
+	            );
+
 	            return _react2['default'].createElement(
 	                'div',
 	                { className: 'ui menu' },
 	                _react2['default'].createElement(
-	                    'h1',
-	                    { className: 'ui header' },
-	                    'Kick Me!',
-	                    _react2['default'].createElement(
-	                        'small',
-	                        { className: 'ui sub header' },
-	                        'New Project Notifications for Kickstater'
-	                    )
+	                    'div',
+	                    { className: 'header item' },
+	                    'Kick Me!'
 	                ),
 	                _react2['default'].createElement(
 	                    'div',
 	                    { className: 'right menu' },
-	                    _react2['default'].createElement(
-	                        'span',
-	                        { className: 'item' },
-	                        _react2['default'].createElement(_project_creator_searchSearchBoxJs2['default'], { user: this.props.user })
-	                    ),
-	                    _react2['default'].createElement(
-	                        'span',
-	                        { className: 'item' },
-	                        'Sign In/Sign Out'
-	                    )
+	                    user ? searchBox : null,
+	                    user ? loggedInMenu : null
 	                )
 	            );
 	        }
@@ -22740,24 +22745,24 @@
 	    _createClass(App, [{
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
-	            this.getUser();
 	            setInterval(this.getUser, 200);
 	        }
 	    }, {
 	        key: 'getUser',
 	        value: function getUser() {
 	            var storageData = localStorage.getItem('Kickme');
-	            if (!storageData) {
-	                return;
+	            var user = false;
+
+	            if (storageData) {
+	                user = JSON.parse(storageData).user;
 	            }
 
-	            return JSON.parse(storageData).user || false;
+	            this.setState({ user: user });
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
 	            var user = this.state.user;
-
 	            return _react2['default'].createElement(
 	                'div',
 	                { className: 'container' },

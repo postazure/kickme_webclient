@@ -13,20 +13,22 @@ export default class App extends React.Component {
     }
 
     componentDidMount() {
-        this.getUser();
         setInterval(this.getUser, 200);
     }
 
     getUser() {
         let storageData = localStorage.getItem('Kickme');
-        if (! storageData) {return;}
+        let user = false;
 
-        return JSON.parse(storageData).user || false;
+        if (storageData) {
+            user = JSON.parse(storageData).user;
+        }
+
+        this.setState({user: user});
     }
 
     render() {
         let user = this.state.user;
-
         return(
             <div className="container">
                 <Header user={user} />

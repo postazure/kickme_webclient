@@ -2,20 +2,26 @@ import React from 'react'
 import SearchBox from '../project_creator_search/searchBox.js'
 
 export default class Header extends React.Component {
+
+    signUserOut() {
+        localStorage.removeItem('Kickme');
+    }
+
     render() {
+        let user = this.props.user;
+
+        let loggedInMenu = <a onClick={this.signUserOut} className="item">Sign Out</a>
+        let searchBox = <span className="item"><SearchBox user={user} /></span>;
+
         return (
             <div className="ui menu">
-                <h1 className="ui header">Kick Me!
-                    <small className="ui sub header">New Project Notifications for Kickstater</small>
-                </h1>
+                <div className="header item">
+                        Kick Me!
+                </div>
 
                 <div className="right menu">
-                <span className="item">
-                    <SearchBox user={this.props.user} />
-                </span>
-                <span className="item">
-                    Sign In/Sign Out
-                </span>
+                    {user ? searchBox : null }
+                    {user ? loggedInMenu : null }
                 </div>
             </div>
         )
