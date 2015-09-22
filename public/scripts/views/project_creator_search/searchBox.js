@@ -52,7 +52,6 @@ export default class SearchBox extends React.Component {
 
     searchProjectCreators(query) {
         let normalizedQuery = query.replace(/\s /g,"+")
-        console.log( normalizedQuery );
         request
             .post('http://localhost:3000/project_creators/search?search_name=' + normalizedQuery)
             .end((err, res) => {
