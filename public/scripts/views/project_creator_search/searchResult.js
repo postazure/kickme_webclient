@@ -25,7 +25,7 @@ export default class SearchResult extends React.Component {
             .end((err, res) => {
                 if (err) {console.error( err );}
                 if (res) {
-                    
+                    this.props.vessel.run('clearSearchBox')
                 }
             })
     }

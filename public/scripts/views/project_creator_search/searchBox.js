@@ -1,6 +1,7 @@
 import React from 'react'
 import request from 'superagent'
 import SearchResults from './searchResults.js'
+import Vessel from '../../lib/vessel.js'
 
 export default class SearchBox extends React.Component {
     constructor(props) {
@@ -13,6 +14,8 @@ export default class SearchBox extends React.Component {
         this.getValues = this.getValues.bind(this);
         this.tick = this.tick.bind(this);
         this.searchProjectCreators = this.searchProjectCreators.bind(this);
+
+        this.vessel = new Vessel(this, {clearSearchBox: this.clearSearchBox});
     }
 
     tick() {
@@ -28,6 +31,7 @@ export default class SearchBox extends React.Component {
     }
 
     clearSearchBox() {
+        this.setState({hasResults: false});
         let searchInput = React.findDOMNode(this.refs.search);
         searchInput.value = "";
     }
@@ -70,7 +74,7 @@ export default class SearchBox extends React.Component {
                     <input onKeyUp={this.getValues} ref="search" className="prompt" type="text" placeholder="new project creator" />
                     <i className="search icon"></i>
                 </div>
-                <SearchResults clearSearchBox={this.clearSearchBox} hasResults={this.state.hasResults} projectCreators={this.state.projectCreators}/>
+                <SearchResults vessel={this.vessel} hasResults={this.state.hasResults} projectCreators={this.state.projectCreators}/>
             </div>
         )
     }

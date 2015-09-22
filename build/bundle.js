@@ -22071,6 +22071,10 @@
 
 	var _searchResultsJs2 = _interopRequireDefault(_searchResultsJs);
 
+	var _libVesselJs = __webpack_require__(166);
+
+	var _libVesselJs2 = _interopRequireDefault(_libVesselJs);
+
 	var SearchBox = (function (_React$Component) {
 	    _inherits(SearchBox, _React$Component);
 
@@ -22086,6 +22090,8 @@
 	        this.getValues = this.getValues.bind(this);
 	        this.tick = this.tick.bind(this);
 	        this.searchProjectCreators = this.searchProjectCreators.bind(this);
+
+	        this.vessel = new _libVesselJs2['default'](this, { clearSearchBox: this.clearSearchBox });
 	    }
 
 	    _createClass(SearchBox, [{
@@ -22106,6 +22112,7 @@
 	    }, {
 	        key: 'clearSearchBox',
 	        value: function clearSearchBox() {
+	            this.setState({ hasResults: false });
 	            var searchInput = _react2['default'].findDOMNode(this.refs.search);
 	            searchInput.value = "";
 	        }
@@ -22156,7 +22163,7 @@
 	                    _react2['default'].createElement('input', { onKeyUp: this.getValues, ref: 'search', className: 'prompt', type: 'text', placeholder: 'new project creator' }),
 	                    _react2['default'].createElement('i', { className: 'search icon' })
 	                ),
-	                _react2['default'].createElement(_searchResultsJs2['default'], { clearSearchBox: this.clearSearchBox, hasResults: this.state.hasResults, projectCreators: this.state.projectCreators })
+	                _react2['default'].createElement(_searchResultsJs2['default'], { vessel: this.vessel, hasResults: this.state.hasResults, projectCreators: this.state.projectCreators })
 	            );
 	        }
 	    }]);
@@ -22207,6 +22214,7 @@
 	    _createClass(SearchResults, [{
 	        key: 'render',
 	        value: function render() {
+	            var _this = this;
 
 	            var searchResults = undefined;
 
@@ -22214,7 +22222,7 @@
 	                searchResults = _react2['default'].createElement('div', { className: 'results hidden' });
 	            } else {
 	                var projectCreators = this.props.projectCreators.map(function (projectCreator) {
-	                    return _react2['default'].createElement(_searchResultJs2['default'], { projectCreator: projectCreator });
+	                    return _react2['default'].createElement(_searchResultJs2['default'], { vessel: _this.props.vessel, projectCreator: projectCreator });
 	                });
 
 	                searchResults = _react2['default'].createElement(
@@ -22275,6 +22283,8 @@
 	    _createClass(SearchResult, [{
 	        key: 'addCreatorToWatchList',
 	        value: function addCreatorToWatchList() {
+	            var _this = this;
+
 	            var userToken = 'gtYz5UAsmNBqSJY1EfNCkHaP'; //TODO: Don't hard code this
 
 	            _superagent2['default'].post('http://localhost:3000/user/follow?token=' + userToken).send({
@@ -22288,7 +22298,9 @@
 	                if (err) {
 	                    console.error(err);
 	                }
-	                if (res) {}
+	                if (res) {
+	                    _this.props.vessel.run('clearSearchBox');
+	                }
 	            });
 	        }
 	    }, {
@@ -22316,6 +22328,53 @@
 
 	exports['default'] = SearchResult;
 	module.exports = exports['default'];
+
+/***/ },
+/* 166 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Vessel = (function () {
+	    function Vessel(context, callbacks) {
+	        _classCallCheck(this, Vessel);
+
+	        this.context = context;
+	        this.callbacks = callbacks;
+	    }
+
+	    _createClass(Vessel, [{
+	        key: "addFunc",
+	        value: function addFunc(cb) {
+	            var name = cb.name;
+	            this.callbacks = Object.assign({ name: cb });
+	        }
+	    }, {
+	        key: "run",
+	        value: function run(cbString) {
+	            var cb = this.callbacks[cbString];
+
+	            for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	                args[_key - 1] = arguments[_key];
+	            }
+
+	            return cb.call.apply(cb, [this.context].concat(args));
+	        }
+	    }]);
+
+	    return Vessel;
+	})();
+
+	exports["default"] = Vessel;
+	module.exports = exports["default"];
 
 /***/ }
 /******/ ]);

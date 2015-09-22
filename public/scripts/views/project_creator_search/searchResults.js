@@ -9,9 +9,9 @@ export default class SearchResults extends React.Component {
         if ( ! this.props.hasResults) {
             searchResults =  (<div className="results hidden"></div>);
         } else {
-            let projectCreators = this.props.projectCreators.map(function (projectCreator) {
+            let projectCreators = this.props.projectCreators.map((projectCreator) => {
                 return (
-                    <SearchResult projectCreator={projectCreator}/>
+                    <SearchResult vessel={this.props.vessel} projectCreator={projectCreator}/>
                 )
             });
 
