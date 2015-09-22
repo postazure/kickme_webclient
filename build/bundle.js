@@ -22633,6 +22633,10 @@
 
 	var _superagent2 = _interopRequireDefault(_superagent);
 
+	var _errorJs = __webpack_require__(232);
+
+	var _errorJs2 = _interopRequireDefault(_errorJs);
+
 	var SignUp = (function (_React$Component) {
 	    _inherits(SignUp, _React$Component);
 
@@ -22640,6 +22644,9 @@
 	        _classCallCheck(this, SignUp);
 
 	        _get(Object.getPrototypeOf(SignUp.prototype), 'constructor', this).call(this);
+	        this.state = {
+	            formErrors: {}
+	        };
 	        this.handleFormSubmit = this.handleFormSubmit.bind(this);
 	    }
 
@@ -22690,8 +22697,14 @@
 	                    password: password, email: email
 	                } }).end(function (err, res) {
 	                if (err) {
-	                    console.error(err);
+	                    //console.log( err );
+	                    var errors = Object.assign({}, res.body['errors']);
+
+	                    _this.setState({ formErrors: errors });
+	                    console.log('formErrors', _this.state.formErrors);
+	                    return;
 	                }
+
 	                if (res) {
 	                    console.log(res.body);
 	                    var token = res.body.token;
@@ -22703,9 +22716,17 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
+	            var _this2 = this;
+
+	            var errorKeys = Object.keys(this.state.formErrors);
+	            var errors = errorKeys.map(function (key) {
+	                var error = _this2.state.formErrors[key];
+	                return _react2['default'].createElement(_errorJs2['default'], { msgs: error, title: key });
+	            });
+
 	            return _react2['default'].createElement(
 	                'form',
-	                { onSubmit: this.handleFormSubmit, className: 'ui large form' },
+	                { onSubmit: this.handleFormSubmit, className: 'ui large form error' },
 	                _react2['default'].createElement(
 	                    'div',
 	                    { className: 'ui stacked segment' },
@@ -22741,7 +22762,7 @@
 	                    ),
 	                    _react2['default'].createElement('input', { type: 'submit', value: 'Register', className: 'ui fluid large blue submit button' })
 	                ),
-	                _react2['default'].createElement('div', { className: 'ui error message' })
+	                errors
 	            );
 	        }
 	    }]);
@@ -22840,6 +22861,135 @@
 
 	exports['default'] = App;
 	module.exports = exports['default'];
+
+/***/ },
+/* 172 */,
+/* 173 */,
+/* 174 */,
+/* 175 */,
+/* 176 */,
+/* 177 */,
+/* 178 */,
+/* 179 */,
+/* 180 */,
+/* 181 */,
+/* 182 */,
+/* 183 */,
+/* 184 */,
+/* 185 */,
+/* 186 */,
+/* 187 */,
+/* 188 */,
+/* 189 */,
+/* 190 */,
+/* 191 */,
+/* 192 */,
+/* 193 */,
+/* 194 */,
+/* 195 */,
+/* 196 */,
+/* 197 */,
+/* 198 */,
+/* 199 */,
+/* 200 */,
+/* 201 */,
+/* 202 */,
+/* 203 */,
+/* 204 */,
+/* 205 */,
+/* 206 */,
+/* 207 */,
+/* 208 */,
+/* 209 */,
+/* 210 */,
+/* 211 */,
+/* 212 */,
+/* 213 */,
+/* 214 */,
+/* 215 */,
+/* 216 */,
+/* 217 */,
+/* 218 */,
+/* 219 */,
+/* 220 */,
+/* 221 */,
+/* 222 */,
+/* 223 */,
+/* 224 */,
+/* 225 */,
+/* 226 */,
+/* 227 */,
+/* 228 */,
+/* 229 */,
+/* 230 */,
+/* 231 */,
+/* 232 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var Error = (function (_React$Component) {
+	    _inherits(Error, _React$Component);
+
+	    function Error() {
+	        _classCallCheck(this, Error);
+
+	        _get(Object.getPrototypeOf(Error.prototype), "constructor", this).apply(this, arguments);
+	    }
+
+	    _createClass(Error, [{
+	        key: "render",
+	        value: function render() {
+	            var capitalizedTitle = this.props.title.charAt(0).toUpperCase() + this.props.title.slice(1);
+
+	            var msgs = this.props.msgs.map(function (msg) {
+
+	                return _react2["default"].createElement(
+	                    "p",
+	                    null,
+	                    capitalizedTitle,
+	                    " ",
+	                    msg,
+	                    "."
+	                );
+	            });
+
+	            return _react2["default"].createElement(
+	                "div",
+	                { className: "ui error visible message" },
+	                _react2["default"].createElement(
+	                    "div",
+	                    { "class": "header" },
+	                    "The Following Error has occurred."
+	                ),
+	                msgs
+	            );
+	        }
+	    }]);
+
+	    return Error;
+	})(_react2["default"].Component);
+
+	exports["default"] = Error;
+	module.exports = exports["default"];
 
 /***/ }
 /******/ ]);

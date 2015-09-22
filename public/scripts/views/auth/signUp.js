@@ -1,9 +1,13 @@
 import React from 'react'
 import request from 'superagent'
+import Error from './error.js'
 
 export default class SignUp extends React.Component {
     constructor(props) {
         super();
+        this.state = {
+            formErrors: {}
+        };
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
     }
 
@@ -49,7 +53,15 @@ export default class SignUp extends React.Component {
                 password: password, email: email
             }})
             .end((err, res) => {
-                if (err) {console.error( err );}
+                if (err) {
+                    //console.log( err );
+                    let errors = Object.assign({}, res.body['errors']);
+
+                    this.setState({formErrors: errors});
+                    console.log( 'formErrors', this.state.formErrors );
+                    return;
+                }
+
                 if (res) {
                     console.log( res.body );
                     let token = res.body.token;
@@ -61,8 +73,16 @@ export default class SignUp extends React.Component {
     }
 
     render() {
+        let errorKeys = Object.keys(this.state.formErrors);
+        let errors = errorKeys.map((key) => {
+            let error = this.state.formErrors[key];
+            return(
+                <Error msgs={error} title={key} />
+            )
+        });
+
         return(
-            <form onSubmit={this.handleFormSubmit} className="ui large form">
+            <form onSubmit={this.handleFormSubmit} className="ui large form error">
                 <div className="ui stacked segment">
                     <div className="field">
                         <div className="ui left icon input">
@@ -85,7 +105,7 @@ export default class SignUp extends React.Component {
                     <input type="submit" value="Register" className="ui fluid large blue submit button" />
                 </div>
 
-                <div className="ui error message"></div>
+                {errors}
             </form>
         )
     }
