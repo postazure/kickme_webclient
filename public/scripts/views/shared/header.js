@@ -1,10 +1,23 @@
 import React from 'react'
 import SearchBox from '../project_creator_search/searchBox.js'
+import request from 'superagent'
 
 export default class Header extends React.Component {
+    constructor(props) {
+        super();
+        this.signUserOut = this.signUserOut.bind(this);
+    }
 
     signUserOut() {
-        // TODO: Hit api endpoint to signout
+        let token = this.props.user.token;
+        request
+            .post('http://localhost:3000/logout/' + token)
+            .end((err, res) => {
+                if (err) {
+                    console.error( err );
+                }
+            });
+
         localStorage.removeItem('Kickme');
     }
 

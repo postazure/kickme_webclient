@@ -20462,19 +20462,30 @@
 
 	var _project_creator_searchSearchBoxJs2 = _interopRequireDefault(_project_creator_searchSearchBoxJs);
 
+	var _superagent = __webpack_require__(160);
+
+	var _superagent2 = _interopRequireDefault(_superagent);
+
 	var Header = (function (_React$Component) {
 	    _inherits(Header, _React$Component);
 
-	    function Header() {
+	    function Header(props) {
 	        _classCallCheck(this, Header);
 
-	        _get(Object.getPrototypeOf(Header.prototype), 'constructor', this).apply(this, arguments);
+	        _get(Object.getPrototypeOf(Header.prototype), 'constructor', this).call(this);
+	        this.signUserOut = this.signUserOut.bind(this);
 	    }
 
 	    _createClass(Header, [{
 	        key: 'signUserOut',
 	        value: function signUserOut() {
-	            // TODO: Hit api endpoint to signout
+	            var token = this.props.user.token;
+	            _superagent2['default'].post('http://localhost:3000/logout/' + token).end(function (err, res) {
+	                if (err) {
+	                    console.error(err);
+	                }
+	            });
+
 	            localStorage.removeItem('Kickme');
 	        }
 	    }, {
@@ -20556,28 +20567,40 @@
 	        _classCallCheck(this, WatchList);
 
 	        _get(Object.getPrototypeOf(WatchList.prototype), 'constructor', this).call(this);
-	        this.state = { projectCreators: [] };
+	        this.state = { projectCreators: [], intervals: [] };
 	        this.getProjectCreators = this.getProjectCreators.bind(this);
 	    }
 
 	    _createClass(WatchList, [{
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
+	            var _this = this;
+
 	            this.getProjectCreators();
-	            setInterval(this.getProjectCreators, 2000);
+	            var interval = setInterval(function () {
+	                _this.getProjectCreators(interval);
+	            }, 2000);
+	            this.setState({ intervals: this.state.intervals.push(interval) });
 	        }
 	    }, {
 	        key: 'getProjectCreators',
-	        value: function getProjectCreators() {
-	            var _this = this;
+	        value: function getProjectCreators(interval) {
+	            var _this2 = this;
 
+	            if (!this.props.user) {
+	                return;
+	            }
 	            var userToken = this.props.user.token;
 
 	            _superagent2['default'].get('http://localhost:3000/user/project_creators?token=' + userToken).end(function (err, res) {
 	                if (err) {
 	                    console.error(err);
+	                    if (err.status === 401) {
+	                        window.clearInterval(interval);
+	                        localStorage.removeItem('Kickme');
+	                    }
 	                }
-	                _this.setState({ projectCreators: res.body });
+	                _this2.setState({ projectCreators: res.body });
 	            });
 	        }
 	    }, {
@@ -22544,7 +22567,6 @@
 	                    console.error(err);
 	                }
 	                if (res) {
-	                    console.log(res.body);
 	                    var token = res.body.token;
 	                    _this.storeUser(email, token);
 	                }

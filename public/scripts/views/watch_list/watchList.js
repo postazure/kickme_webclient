@@ -6,22 +6,32 @@ export default class WatchList extends React.Component {
 
     constructor(props) {
         super();
-        this.state = { projectCreators: [] };
+        this.state = { projectCreators: [], intervals:[] };
         this.getProjectCreators = this.getProjectCreators.bind(this);
     }
 
     componentDidMount() {
         this.getProjectCreators();
-        setInterval(this.getProjectCreators, 2000);
+        let interval = setInterval(() => {
+            this.getProjectCreators(interval)
+        }, 2000);
+        this.setState({intervals: this.state.intervals.push(interval)});
     }
 
-    getProjectCreators() {
+    getProjectCreators(interval) {
+        if (! this.props.user) {return;}
         let userToken = this.props.user.token;
 
         request
             .get('http://localhost:3000/user/project_creators?token=' + userToken)
             .end((err, res) => {
-                if (err) {console.error( err );}
+                if (err) {
+                    console.error( err );
+                    if (err.status === 401) {
+                        window.clearInterval(interval);
+                        localStorage.removeItem('Kickme');
+                    }
+                }
                 this.setState({projectCreators: res.body});
             }
         )
