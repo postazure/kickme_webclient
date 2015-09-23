@@ -50,8 +50,20 @@ export default class WatchList extends React.Component {
         });
 
         return (
-            <div className="ui large relaxed list">
-                {projectCreators}
+            <div>
+                <div className="ui raised segment">
+                    <h1>Watch List <small>Project Creators you're following.</small></h1>
+                    <p>
+                        Use the Search Bar in the menu to add new project creators.
+                    </p>
+                    <p>
+                        If you have trouble finding a Project Creator, search for a recent project they have posted.
+                    </p>
+                </div>
+
+                <div className="ui large relaxed list">
+                    {projectCreators}
+                </div>
             </div>
         )
     }

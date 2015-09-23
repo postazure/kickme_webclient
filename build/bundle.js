@@ -20617,8 +20617,36 @@
 
 	            return _react2['default'].createElement(
 	                'div',
-	                { className: 'ui large relaxed list' },
-	                projectCreators
+	                null,
+	                _react2['default'].createElement(
+	                    'div',
+	                    { className: 'ui raised segment' },
+	                    _react2['default'].createElement(
+	                        'h1',
+	                        null,
+	                        'Watch List ',
+	                        _react2['default'].createElement(
+	                            'small',
+	                            null,
+	                            'Project Creators you\'re following.'
+	                        )
+	                    ),
+	                    _react2['default'].createElement(
+	                        'p',
+	                        null,
+	                        'Use the Search Bar in the menu to add new project creators.'
+	                    ),
+	                    _react2['default'].createElement(
+	                        'p',
+	                        null,
+	                        'If you have trouble finding a Project Creator, search for a recent project they have posted.'
+	                    )
+	                ),
+	                _react2['default'].createElement(
+	                    'div',
+	                    { className: 'ui large relaxed list' },
+	                    projectCreators
+	                )
 	            );
 	        }
 	    }]);
@@ -22389,6 +22417,8 @@
 
 	            return cb.call.apply(cb, [this.context].concat(args));
 	        }
+
+	        //    TODO: Make me react-y
 	    }]);
 
 	    return Vessel;
@@ -22877,6 +22907,47 @@
 	        key: 'render',
 	        value: function render() {
 	            var user = this.state.user;
+	            var mainView = undefined;
+
+	            if (user) {
+	                mainView = _react2['default'].createElement(_viewsWatch_listWatchListJs2['default'], { user: user });
+	            } else {
+	                mainView = _react2['default'].createElement(
+	                    'div',
+	                    null,
+	                    _react2['default'].createElement(
+	                        'div',
+	                        { className: 'ui raised segment' },
+	                        _react2['default'].createElement(
+	                            'h1',
+	                            null,
+	                            'Kickme! ',
+	                            _react2['default'].createElement(
+	                                'small',
+	                                null,
+	                                'Email notifications for kickstarter.'
+	                            )
+	                        ),
+	                        _react2['default'].createElement(
+	                            'p',
+	                            null,
+	                            'Kickme gives you the ability to \'follow\' Project Creators on Kickstarter.'
+	                        ),
+	                        _react2['default'].createElement(
+	                            'p',
+	                            null,
+	                            'When a project creator on your watchlist starts a new campaign, you will receive an email with all the new project creator\'s projects.'
+	                        ),
+	                        _react2['default'].createElement(
+	                            'p',
+	                            null,
+	                            'Please create an account or log in.'
+	                        )
+	                    ),
+	                    _react2['default'].createElement(_viewsAuthAuthJs2['default'], null)
+	                );
+	            }
+
 	            return _react2['default'].createElement(
 	                'div',
 	                { className: 'container' },
@@ -22884,7 +22955,7 @@
 	                _react2['default'].createElement(
 	                    'div',
 	                    { className: 'content container' },
-	                    user ? _react2['default'].createElement(_viewsWatch_listWatchListJs2['default'], { user: user }) : _react2['default'].createElement(_viewsAuthAuthJs2['default'], null)
+	                    mainView
 	                )
 	            );
 	        }
