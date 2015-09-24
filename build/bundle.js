@@ -22341,7 +22341,8 @@
 	                    kickstarter_id: this.props.projectCreator.kickstarter_id,
 	                    name: this.props.projectCreator.name,
 	                    profile_avatar: this.props.projectCreator.profile_avatar,
-	                    profile_url: this.props.projectCreator.profile_url
+	                    profile_url: this.props.projectCreator.profile_url,
+	                    project: this.props.projectCreator.project
 	                }
 	            }).end(function (err, res) {
 	                if (err) {
