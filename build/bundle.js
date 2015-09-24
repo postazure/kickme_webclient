@@ -20480,7 +20480,9 @@
 	        key: 'signUserOut',
 	        value: function signUserOut() {
 	            var token = this.props.user.token;
-	            _superagent2['default'].post('http://localhost:3000/logout/' + token).end(function (err, res) {
+	            _superagent2['default']
+	            //.post('http://localhost:3000/logout/' + token)
+	            .post('https://postazure-kickme.herokuapp.com/logout/' + token).end(function (err, res) {
 	                if (err) {
 	                    console.error(err);
 	                }
@@ -20592,7 +20594,9 @@
 	            }
 	            var userToken = this.props.user.token;
 
-	            _superagent2['default'].get('http://localhost:3000/user/project_creators?token=' + userToken).end(function (err, res) {
+	            _superagent2['default']
+	            //.get('http://localhost:3000/user/project_creators?token=' + userToken)
+	            .get('https://postazure-kickme.herokuapp.com/user/project_creators?token=' + userToken).end(function (err, res) {
 	                if (err) {
 	                    console.error(err);
 	                    if (err.status === 401) {
@@ -22183,7 +22187,9 @@
 	            var _this = this;
 
 	            var normalizedQuery = query.replace(/\s /g, "+");
-	            _superagent2['default'].post('http://localhost:3000/project_creators/search?search_name=' + normalizedQuery).end(function (err, res) {
+	            _superagent2['default']
+	            //.post('http://localhost:3000/project_creators/search?search_name=' + normalizedQuery)
+	            .post('https://postazure-kickme.herokuapp.com/project_creators/search?search_name=' + normalizedQuery).end(function (err, res) {
 	                if (err) {
 	                    console.error(err);
 	                }
@@ -22336,7 +22342,9 @@
 	            }
 	            var userToken = user.token;
 
-	            _superagent2['default'].post('http://localhost:3000/user/follow?token=' + userToken).send({
+	            _superagent2['default']
+	            //.post('http://localhost:3000/user/follow?token=' + userToken)
+	            .post('https://postazure-kickme.herokuapp.com/user/follow?token=' + userToken).send({
 	                project_creator: {
 	                    kickstarter_id: this.props.projectCreator.kickstarter_id,
 	                    name: this.props.projectCreator.name,
@@ -22593,7 +22601,9 @@
 
 	            var params = '?email=' + email + '&password=' + password;
 
-	            _superagent2['default'].post('http://localhost:3000/login' + params).end(function (err, res) {
+	            _superagent2['default']
+	            //.post('http://localhost:3000/login' + params)
+	            .post('https://postazure-kickme.herokuapp.com/login' + params).end(function (err, res) {
 	                if (err) {
 	                    console.error(err);
 	                }
@@ -22747,7 +22757,9 @@
 
 	            this.setState({ formErrors: {} });
 
-	            _superagent2['default'].post('http://localhost:3000/registrations').send({ user: {
+	            _superagent2['default']
+	            //.post('http://localhost:3000/registrations')
+	            .post('https://postazure-kickme.herokuapp.com/registrations').send({ user: {
 	                    password: password, email: email
 	                } }).end(function (err, res) {
 	                if (err) {

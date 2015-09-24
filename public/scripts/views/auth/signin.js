@@ -30,7 +30,8 @@ export default class SignIn extends React.Component {
         let params = '?email=' + email + '&password=' + password;
 
         request
-            .post('http://localhost:3000/login' + params)
+            //.post('http://localhost:3000/login' + params)
+            .post('https://postazure-kickme.herokuapp.com/login' + params)
             .end((err, res) => {
                 if (err) {console.error( err );}
                 if (res) {

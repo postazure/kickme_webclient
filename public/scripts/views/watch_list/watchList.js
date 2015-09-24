@@ -23,7 +23,8 @@ export default class WatchList extends React.Component {
         let userToken = this.props.user.token;
 
         request
-            .get('http://localhost:3000/user/project_creators?token=' + userToken)
+            //.get('http://localhost:3000/user/project_creators?token=' + userToken)
+            .get('https://postazure-kickme.herokuapp.com/user/project_creators?token=' + userToken)
             .end((err, res) => {
                 if (err) {
                     console.error( err );

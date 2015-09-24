@@ -11,7 +11,8 @@ export default class Header extends React.Component {
     signUserOut() {
         let token = this.props.user.token;
         request
-            .post('http://localhost:3000/logout/' + token)
+            //.post('http://localhost:3000/logout/' + token)
+            .post('https://postazure-kickme.herokuapp.com/logout/' + token)
             .end((err, res) => {
                 if (err) {
                     console.error( err );

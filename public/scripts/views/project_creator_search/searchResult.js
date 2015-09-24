@@ -19,7 +19,8 @@ export default class SearchResult extends React.Component {
         let userToken = user.token;
 
         request
-            .post('http://localhost:3000/user/follow?token=' + userToken)
+            //.post('http://localhost:3000/user/follow?token=' + userToken)
+            .post('https://postazure-kickme.herokuapp.com/user/follow?token=' + userToken)
             .send({
                 project_creator: {
                     kickstarter_id: this.props.projectCreator.kickstarter_id,

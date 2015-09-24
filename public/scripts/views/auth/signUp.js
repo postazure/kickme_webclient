@@ -49,7 +49,8 @@ export default class SignUp extends React.Component {
         this.setState({formErrors: {}});
 
         request
-            .post('http://localhost:3000/registrations')
+            //.post('http://localhost:3000/registrations')
+            .post('https://postazure-kickme.herokuapp.com/registrations')
             .send({ user: {
                 password: password, email: email
             }})
